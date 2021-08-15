@@ -1,0 +1,157 @@
+﻿@page
+@model AboutModel
+@{
+    ViewData["Title"] = "Results";
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@Model.Message</h3>
+<h4>Found Total Words @Model.WordCount</h4>
+<h4>Found Total Images @Model.ImageCount</h4>
+<h4>Found Total Unique @Model.UniqueWordCount</h4>
+
+<div class="container">
+    <div id="accordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-primary" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Top 7
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Word</th>
+                    <th scope="col">Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{var limit=1;}
+                @foreach (var item in @Model.AllWords)
+                {
+                    var i = item.Split(":");
+                    <tr>
+                        <th scope="row">@Html.Raw(limit)</th>
+                        <td>@Html.Raw(i[0])</td>
+                        <td>@Html.Raw(i[1])</td>
+                    </tr>
+                    @if (limit++>6)
+                    {
+                        break;
+                    }
+
+                }
+            </tbody>
+        </table>
+        
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-primary collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Click for All words...
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+         <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Word</th>
+                    <th scope="col">Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{var reCount=1;}
+                @foreach (var item in @Model.AllWords)
+                {
+                    var i = item.Split(":");
+                    <tr>
+                        <th scope="row">@Html.Raw(reCount)</th>
+                        <td>@Html.Raw(i[0])</td>
+                        <td>@Html.Raw(i[1])</td>
+                    </tr>
+                    reCount++;
+                }
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  </div>
+  
+    
+</div>
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <ol class="carousel-indicators">
+        @{var imgNumber = 0;}
+        @foreach (var item in @Model.SiteImages)
+        {
+            @if(imgNumber==0){
+                <li data-target="#myCarousel" data-slide-to="@imgNumber" class="active"></li>
+            }
+            else
+            {
+                <li data-target="#myCarousel" data-slide-to="@imgNumber"></li>
+            }
+
+            imgNumber++;
+        }
+    </ol>
+    <div class="carousel-inner" role="listbox">
+        @{var imgNum=0;}
+        @foreach (var item in @Model.SiteImages)
+        {
+            @if (imgNum==0)
+            {
+                <div class="item active">
+                            
+                    <div class="item active">
+                        <img src="@Html.Raw(item)" class="img-responsive" />
+                        <div class="carousel-caption" role="option"></div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="item">
+                    <div class="item active">
+                        <img src="@Html.Raw(item)" class="img-responsive" />
+                        <div class="carousel-caption" role="option"></div>
+                    </div>
+                </div>
+            }
+            imgNum++;
+        }
+    </div>
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+
+@* <table>
+    @foreach (var item in @Model.SiteImages)
+    {
+        <tr>
+            <td><img src="@Html.Raw(item)" style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;"></td>
+        </tr>        
+    }
+</table> *@
+<p>Slide is not 100%... give it a minute the loading of images will start!!.</p>
