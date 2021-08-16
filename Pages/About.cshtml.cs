@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SiteScrape2.Pages
 {
@@ -20,7 +21,10 @@ namespace SiteScrape2.Pages
 
         public string Message { get; set; }
 
-        public void OnGet()
+        public void OnError(){
+            RedirectToPage("/Index");
+        }
+        public RedirectToPageResult OnGet()
         {
             string _url =  Request.Query["url"];
             
@@ -36,6 +40,13 @@ namespace SiteScrape2.Pages
                 WebClient _client = new WebClient();
                 _client.Headers.Add("User-Agent: Only a test");
                 _html = _client.DownloadString(_url);
+
+                WordCount = GetWordCount(_html, false);
+                ImageCount = GetElementCount(_html);
+                UniqueWordCount = GetWordCount(_html, true);
+                SiteImages = GetImages(_html);
+                AllWords = GetAllWords(_html);
+
             }
             catch (WebException ex)
             {
@@ -46,14 +57,11 @@ namespace SiteScrape2.Pages
                     var reader = new StreamReader(dataStream);
                     var details = reader.ReadToEnd();
                 }
+                return new RedirectToPageResult("Index");
+                
             }
 
-            WordCount = GetWordCount(_html, false);
-            ImageCount = GetElementCount(_html);
-            UniqueWordCount = GetWordCount(_html, true);
-            SiteImages = GetImages(_html);
-            AllWords = GetAllWords(_html);
-
+           return null;
             // Console.WriteLine("Image Tag Count   : " + GetElementCount(_html, TagType.IMG));
             // Console.WriteLine("Word Count        : " + GetWordCount(_html));
             // Console.WriteLine("Unique Word Count : " + GetUniqueWordCount(_html));
